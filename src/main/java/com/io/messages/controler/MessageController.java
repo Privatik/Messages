@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("message")
+@RequestMapping("/")
 public class MessageController {
     private final MessageRepo messageRepo;
 
@@ -34,6 +34,7 @@ public class MessageController {
     @PostMapping
     public Message postMessage(@RequestBody Message message)
     {
+        System.out.println(message.getName());
         return messageRepo.save(message);
     }
 
@@ -51,9 +52,11 @@ public class MessageController {
        messageRepo.delete(message);
     }
 
-    @MessageMapping("/messageText")
-    @SendTo("/topic/message")
+    @MessageMapping("/hello")
+    @SendTo("/topic/greeting")
     public Message greeting(Message message) throws Exception {
+        Thread.sleep(3000);
+        System.out.println(message.getText());
          return  messageRepo.save(message);
     }
 }
