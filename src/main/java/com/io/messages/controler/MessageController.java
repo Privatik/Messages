@@ -2,6 +2,8 @@ package com.io.messages.controler;
 
 import com.io.messages.domain.Message;
 import com.io.messages.repo.MessageRepo;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -14,10 +16,14 @@ import java.util.List;
 @RequestMapping("/")
 public class MessageController {
     private final MessageRepo messageRepo;
+    private final JsonAdapter<Message> adapter;
 
     @Autowired
     public MessageController(MessageRepo messageRepo) {
         this.messageRepo = messageRepo;
+
+        Moshi moshi = new Moshi.Builder().build();
+        adapter = moshi.adapter(Message.class);
     }
 
     @GetMapping
@@ -54,8 +60,10 @@ public class MessageController {
 
     @MessageMapping("/hello")
     @SendTo("/topic/greeting")
-    public Message greeting(Message message) throws Exception {
+    public Message greeting(String messageJson) throws Exception {
         Thread.sleep(3000);
+
+        Message message = adapter.fromJson(messageJson);
         System.out.println(message.getText());
          return  messageRepo.save(message);
     }
