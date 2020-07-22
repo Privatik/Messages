@@ -1,6 +1,8 @@
 package com.io.messages.domain;
 
 
+import org.postgresql.util.PSQLException;
+
 import javax.persistence.*;
 
 @Entity
