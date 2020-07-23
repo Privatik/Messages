@@ -60,11 +60,8 @@ public class MessageController {
 
     @MessageMapping("/hello")
     @SendTo("/topic/greeting")
-    public Message greeting(String messageJson) throws Exception {
-        Thread.sleep(3000);
-
-        Message message = adapter.fromJson(messageJson);
-        System.out.println(message.getText());
+    public Message greetings(Message message) {
+        System.out.println("websocket");
          return  messageRepo.save(message);
     }
 }
