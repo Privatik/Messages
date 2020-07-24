@@ -1,6 +1,7 @@
 package com.io.messages.controler;
 
 import com.io.messages.domain.Message;
+import com.io.messages.model.MessageText;
 import com.io.messages.repo.MessageRepo;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -60,8 +61,8 @@ public class MessageController {
 
     @MessageMapping("/hello")
     @SendTo("/topic/greeting")
-    public Message greetings(Message message) {
+    public String greetings(MessageText text) {
         System.out.println("websocket");
-         return  messageRepo.save(message);
+        return text.getText();
     }
 }

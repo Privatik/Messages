@@ -1,6 +1,7 @@
 package com.io.messages.domain;
 
 
+import com.squareup.moshi.Moshi;
 import org.postgresql.util.PSQLException;
 
 import javax.persistence.*;
@@ -17,11 +18,8 @@ public class Message {
 
     @Override
     public String toString() {
-        return "Message{" +
-                "Id=" + id +
-                ", name='" + name + '\'' +
-                ", text='" + text + '\'' +
-                '}';
+        Moshi moshi = new Moshi.Builder().build();
+        return moshi.adapter(Message.class).toJson(this);
     }
 
     public void setName(String name) {
