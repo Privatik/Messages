@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/base")
 public class MessageController {
     private final MessageRepo messageRepo;
     private final JsonAdapter<Message> adapter;
@@ -59,10 +59,9 @@ public class MessageController {
        messageRepo.delete(message);
     }
 
-    @MessageMapping("/hello")
-    @SendTo("/topic/greeting")
-    public String greetings(MessageText text) {
-        System.out.println("websocket");
-        return text.getText();
+    @MessageMapping("/message")
+    @SendTo("/topic/messages")
+    public Message greetings(Message message) {
+        return messageRepo.save(message);
     }
 }
