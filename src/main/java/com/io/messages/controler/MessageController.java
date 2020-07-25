@@ -61,7 +61,7 @@ public class MessageController {
 
     @MessageMapping("/message")
     @SendTo("/topic/messages")
-    public Message greetings(Message message) {
-        return messageRepo.save(message);
+    public String greetings(String str) {
+        return str;
     }
 }
