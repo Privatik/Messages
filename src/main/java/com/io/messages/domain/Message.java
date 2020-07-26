@@ -1,48 +1,75 @@
 package com.io.messages.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.squareup.moshi.JsonClass;
 import com.squareup.moshi.Moshi;
 import org.postgresql.util.PSQLException;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
+@Table
 public class Message {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String name;
     private String text;
 
-    @Override
-    public String toString() {
-        Moshi moshi = new Moshi.Builder().build();
-        return moshi.adapter(Message.class).toJson(this);
-    }
+    @Column(updatable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime dateTime;
 
-    public void setName(String name) {
-        this.name = name;
+    @ManyToOne
+    @JoinColumn(name="chat_id", nullable=false)
+    private Chat chat;
+
+    @ManyToOne
+    @JoinColumn(name="user_id", nullable=false)
+    private User user;
+
+
+
+    public String getText() {
+        return text;
     }
 
     public void setText(String text) {
         this.text = text;
     }
 
-    public String getName() {
-        return name;
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
-    public String getText() {
-        return text;
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getId(){
-        return id;
+    public Chat getChat() {
+        return chat;
+    }
+
+    public void setChat(Chat chat) {
+        this.chat = chat;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
