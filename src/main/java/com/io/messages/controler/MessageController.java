@@ -4,11 +4,15 @@ package com.io.messages.controler;
 import com.io.messages.domain.Message;
 import com.io.messages.domain.User;
 import com.io.messages.exception.NotFoundException;
+import com.io.messages.handler.WebSocketHandler;
 import com.io.messages.repo.MessageRepo;
 import com.io.messages.repo.UserRepo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,8 +55,7 @@ public class MessageController implements IFoundTwoElement<Message, User>{
         {
             Message messageFromOb = foundElement(id);
 
-            message.setDateTime(messageFromOb.getDateTime());
-            BeanUtils.copyProperties(message, messageFromOb, "id");
+            BeanUtils.copyProperties(message, messageFromOb, "id", "text", "dateTime");
             return messageRepo.save(messageFromOb);
         }
 
