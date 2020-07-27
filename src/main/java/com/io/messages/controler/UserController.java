@@ -1,26 +1,24 @@
 package com.io.messages.controler;
 
-import com.io.messages.domain.Chat;
+
 import com.io.messages.domain.User;
 import com.io.messages.exception.NotFoundException;
 import com.io.messages.repo.UserRepo;
-import com.io.messages.servise.UserAndChatService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
 import java.util.List;
 
 @RestController
 public class UserController implements IFound<User> {
     private final UserRepo userRepo;
-    private final UserAndChatService userAndChatService;
+  //  private final UserAndChatService userAndChatService;
 
     @Autowired
-    public UserController(UserRepo userRepo, UserAndChatService userAndChatService) {
+    public UserController(UserRepo userRepo) {
         this.userRepo = userRepo;
-        this.userAndChatService = userAndChatService;
+       // this.userAndChatService = userAndChatService;
     }
 
     @GetMapping("/user")
@@ -37,7 +35,7 @@ public class UserController implements IFound<User> {
     @PostMapping("/user")
     public User postUser(@RequestBody User user)
     {
-        user.setChatList(new HashSet<>());
+        //user.setChatList(new HashSet<>());
         return userRepo.save(user);
     }
 

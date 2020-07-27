@@ -23,9 +23,9 @@ public class Message {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateTime;
 
-    @ManyToOne
+   /* @ManyToOne
     @JoinColumn(name="chat_id", nullable=false)
-    private Chat chat;
+    private Chat chat;*/
 
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
@@ -57,13 +57,13 @@ public class Message {
         this.id = id;
     }
 
-    public Chat getChat() {
+  /*  public Chat getChat() {
         return chat;
     }
 
     public void setChat(Chat chat) {
         this.chat = chat;
-    }
+    }*/
 
     public User getUser() {
         return user;

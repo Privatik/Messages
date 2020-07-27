@@ -14,17 +14,14 @@ public class User {
     private String name;
     private String picture;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Chat> chatList;
-
-    @ManyToMany
+  /*  @ManyToMany
     @JoinTable(
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "chat_id"))
-    private List<Chat> chats;
+    private Set<Chat> chats;*/
 
-    @OneToMany(mappedBy="user")
-    private List<Message> messages;
+   /* @OneToMany(mappedBy="user")
+    private List<Message> messages;*/
 
     public Long getId() {
         return id;
@@ -50,11 +47,11 @@ public class User {
         this.picture = picture;
     }
 
-    public Set<Chat> getChatList() {
+   /* public Set<Chat> getChatList() {
         return chatList;
     }
 
     public void setChatList(Set<Chat> chatList) {
         this.chatList = chatList;
-    }
+    }*/
 }

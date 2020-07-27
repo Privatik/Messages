@@ -1,15 +1,82 @@
 package com.io.messages.controler;
 
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.web.bind.annotation.RestController;
+
+import com.io.messages.domain.Message;
+import com.io.messages.domain.User;
+import com.io.messages.exception.NotFoundException;
+import com.io.messages.repo.MessageRepo;
+import com.io.messages.repo.UserRepo;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
-public class MessageController {
+public class MessageController implements IFoundTwoElement<Message, User>{
+        private final MessageRepo messageRepo;
+        private final UserRepo userRepo;
 
-    @MessageMapping("/hello")
-    @SendTo("/topic/greetings")
-    public String greeting(String name) {
-        return "Hello, " + name + "!";
+        @Autowired
+        public MessageController(MessageRepo messageRepo, UserRepo userRepo) {
+             this.messageRepo = messageRepo;
+             this.userRepo = userRepo;
+        }
+
+        @GetMapping("/message")
+        public List<Message> getListMessage()
+        {
+            return messageRepo.findAll();
+        }
+
+        @GetMapping("/message/{id}")
+        public Message getMessage(@PathVariable Long id)
+        {
+            return foundElement(id);
+        }
+
+        @PostMapping("/message/{id}")
+        public Message postMessage(@PathVariable Long id,@RequestBody Message message)
+        {
+            message.setUser(foundTwoElement(id));
+            message.setDateTime(LocalDateTime.now());
+            // chat.setMessages(new ArrayList<>());
+            //   chat.setUsers(new HashSet<>());
+            return messageRepo.save(message);
+        }
+
+        @PutMapping("/message/{id}")
+        public Message putMessage(@PathVariable Long id, @RequestBody Message message)
+        {
+            Message messageFromOb = foundElement(id);
+
+            message.setDateTime(messageFromOb.getDateTime());
+            BeanUtils.copyProperties(message, messageFromOb, "id");
+            return messageRepo.save(messageFromOb);
+        }
+
+        @DeleteMapping("/message/{id}")
+        public void deleteMessage(@PathVariable Long id)
+        {
+            messageRepo.deleteById(id);
+        }
+
+        @DeleteMapping("/message/del")
+        public void deleteAllMessage()
+        {
+            messageRepo.deleteAll();
+        }
+
+    @Override
+    public User foundTwoElement(Long id) {
+       return userRepo.findById(id)
+                .orElseThrow(NotFoundException::new);
     }
+
+    @Override
+        public Message foundElement(Long id) {
+            return messageRepo.findById(id)
+                    .orElseThrow(NotFoundException::new);
+        }
 }
