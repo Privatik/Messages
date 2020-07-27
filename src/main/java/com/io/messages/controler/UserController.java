@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 public class UserController implements IFound<User> {
     private final UserRepo userRepo;
-  //  private final UserAndChatService userAndChatService;
 
     @Autowired
     public UserController(UserRepo userRepo) {
