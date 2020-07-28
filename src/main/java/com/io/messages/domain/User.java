@@ -1,5 +1,7 @@
 package com.io.messages.domain;
 
+import org.hibernate.annotations.RowId;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
@@ -11,8 +13,12 @@ public class User {
     @Id
     private Long id;
 
-    private String name;
-    private String picture;
+    @Column(name = "first_name")
+    private String first_name;
+    @Column(name = "last_name")
+    private String last_name;
+    @Column(name = "photo_max_orig")
+    private String photo_max_orig;
 
   /*  @ManyToMany
     @JoinTable(
@@ -31,23 +37,31 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirst_name() {
+        return first_name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
     }
 
-    public String getPicture() {
-        return picture;
+    public String getLast_name() {
+        return last_name;
     }
 
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
     }
 
-   /* public Set<Chat> getChatList() {
+    public String getPhoto_max_orig() {
+        return photo_max_orig;
+    }
+
+    public void setPhoto_max_orig(String photo_max_orig) {
+        this.photo_max_orig = photo_max_orig;
+    }
+
+/* public Set<Chat> getChatList() {
         return chatList;
     }
 
