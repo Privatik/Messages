@@ -2,6 +2,7 @@ package com.io.messages.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.io.messages.adapter.DataFormat;
 import com.squareup.moshi.JsonClass;
 import com.squareup.moshi.Moshi;
 import org.postgresql.util.PSQLException;
@@ -21,6 +22,7 @@ public class Message {
 
     @Column(updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @DataFormat
     private LocalDateTime dateTime;
 
    /* @ManyToOne
