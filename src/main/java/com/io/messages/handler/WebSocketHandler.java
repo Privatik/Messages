@@ -49,17 +49,13 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         super.afterConnectionEstablished(session);
-        synchronized (this) {
             clients.add(session);
-        }
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         super.afterConnectionClosed(session, status);
-        synchronized (this) {
             clients.remove(session);
-        }
     }
 
     @Override
