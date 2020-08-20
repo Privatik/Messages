@@ -33,6 +33,9 @@ public class Message {
     @JoinColumn(name="user_id", nullable=false)
     private User user;
 
+    @Transient
+    private long sendId;
+
 
 
     public String getText() {
@@ -73,5 +76,13 @@ public class Message {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public long getSendId() {
+        return sendId;
+    }
+
+    public void setSendId(long sendId) {
+        this.sendId = sendId;
     }
 }
