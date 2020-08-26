@@ -2,12 +2,14 @@ package com.io.messages.handler;
 
 import com.io.messages.adapter.DataAdapter;
 import com.io.messages.domain.Message;
+import com.io.messages.model.SendMessage;
 import com.io.messages.repo.MessageRepo;
 import com.io.messages.repo.UserRepo;
 import com.squareup.moshi.Json;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import org.apache.coyote.Adapter;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -24,7 +26,8 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
 
     private static WebSocketHandler webSocketHandler;
     private MessageRepo messageRepo;
-    private JsonAdapter<Message> adapter;
+    private JsonAdapter<SendMessage> adapter;
+   // private JsonAdapter<Message> adapterMessage;
     private Set<WebSocketSession> clients;
 
     public WebSocketHandler(MessageRepo messageRepo) {
@@ -33,7 +36,7 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
         Moshi moshi = new Moshi.Builder()
                 .add(new DataAdapter())
                 .build();
-        adapter = moshi.adapter(Message.class);
+        adapter = moshi.adapter(SendMessage.class);
         clients = new HashSet<>();
     }
 
@@ -60,19 +63,35 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        Message messagePayload = adapter.fromJson(message.getPayload());
+        SendMessage messagePayload = adapter.fromJson(message.getPayload());
+        if (messagePayload == null) return;
+        Message messageModel = messagePayload.getMessage();
         synchronized (this) {
-        messagePayload.setDateTime(LocalDateTime.now());
-        messageRepo.save(messagePayload);
-            clients.forEach(it ->
-            {
-                try {
-                    it.sendMessage(new TextMessage(adapter.toJson(messagePayload)));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+        if (messagePayload.getSendId() == 1) {
+                messageModel.setDateTime(LocalDateTime.now());
+                messageRepo.save(messageModel);
+                send(messagePayload);
+            }
+        else if (messagePayload.getSendId() == 2) {
+               messageRepo.save(messageModel);
+            }
+        else if (messagePayload.getSendId() == 3) {
+              messageRepo.delete(messageModel);
+            }
+            send(messagePayload);
         }
+    }
+
+    void send(SendMessage message)
+    {
+        clients.forEach(it ->
+        {
+            try {
+                it.sendMessage(new TextMessage(adapter.toJson(message)));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @Override
